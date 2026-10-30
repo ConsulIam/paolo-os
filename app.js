@@ -47,10 +47,41 @@ const store = {
 /* ---------------------------------------------------------
    2. SOM (Web Audio, gerado por código — sem arquivos)
    --------------------------------------------------------- */
+function silentWav(n = 4000) {
+  const buf = new Uint8Array(44 + n); const v = new DataView(buf.buffer);
+  const str = (o, t) => [...t].forEach((c, i) => { buf[o + i] = c.charCodeAt(0); });
+  str(0, 'RIFF'); v.setUint32(4, 36 + n, true); str(8, 'WAVEfmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true); v.setUint32(28, 8000, true);
+  v.setUint16(32, 1, true); v.setUint16(34, 8, true); str(36, 'data'); v.setUint32(40, n, true); buf.fill(128, 44);
+  let bin = ''; buf.forEach(x => { bin += String.fromCharCode(x); });
+  return 'data:audio/wav;base64,' + btoa(bin);
+}
 const Sound = {
   ctx: null,
   on: store.get('sound', true),
-  init() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { this.on = false; } } },
+  unlocked: false,
+  init() {
+    if (!this.ctx) {
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* ok */ }
+      try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { this.on = false; return; }
+    }
+    if (this.ctx.state !== 'running') { try { this.ctx.resume(); } catch { /* ok */ } }
+  },
+  /* Precisa rodar dentro de um toque: libera o áudio no iOS/Android, inclusive com a chave de silêncio do iPhone */
+  unlock() {
+    this.init(); if (!this.ctx || this.unlocked) return;
+    try {
+      const b = this.ctx.createBuffer(1, 1, 22050); const s = this.ctx.createBufferSource();
+      s.buffer = b; s.connect(this.ctx.destination); s.start(0);
+      if (!navigator.audioSession) {
+        const a = document.createElement('audio');
+        a.setAttribute('x-webkit-airplay', 'deny'); a.preload = 'auto'; a.loop = true; a.volume = 0.01;
+        a.src = silentWav();
+        const p = a.play(); if (p && p.catch) p.catch(() => {});
+      }
+      this.unlocked = true;
+    } catch { /* ok */ }
+  },
   beep(freq = 660, dur = 0.08, type = 'square', vol = 0.06, when = 0) {
     if (!this.on) return; this.init(); if (!this.ctx) return;
     const t = this.ctx.currentTime + when;
@@ -72,6 +103,8 @@ const Sound = {
     return t;
   },
 };
+['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => addEventListener(ev, () => Sound.unlock(), { capture: true, passive: true }));
+document.addEventListener('visibilitychange', () => { if (!document.hidden && Sound.ctx) Sound.init(); });
 
 /* ---------------------------------------------------------
    3. TOASTS, CONFETE E CONQUISTAS
