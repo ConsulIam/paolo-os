@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- PaoloOS 13 · https://paoloos.consuliam.com -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PaoloOS 13</title>
+  <meta name="description" content="PaoloOS 13 — o sistema operacional de aniversário do Paolo: foguetes, Lua, Marte, carros, ESPBoy e pixel art.">
+  <link rel="canonical" href="https://paoloos.consuliam.com/">
+  <meta property="og:title" content="PaoloOS 13">
+  <meta property="og:description" content="Feliz aniversário, Paolo! Um sistema operacional feito em código, só pra você.">
+  <meta property="og:url" content="https://paoloos.consuliam.com/">
+  <meta name="theme-color" content="#070B1A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PaoloOS">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="mission">
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <div id="device" class="device">
+
+    <!-- BOOT -->
+    <section id="boot" class="boot">
+      <pre id="boot-log" class="boot-log"></pre>
+      <div id="boot-logo" class="boot-logo hidden">
+        <div class="logo-mark">P<span>13</span></div>
+        <h1>PaoloOS</h1>
+        <p class="boot-sub">Mission Control</p>
+        <button id="boot-start" class="btn btn-big">▶ INICIAR</button>
+        <p class="boot-hint">toque na tela</p>
+      </div>
+    </section>
+
+    <!-- DESKTOP -->
+    <main id="desktop" class="desktop hidden" aria-label="Área de trabalho">
+      <div id="icons" class="icons"></div>
+      <div id="windows"></div>
+    </main>
+    <footer id="taskbar" class="taskbar hidden">
+      <button id="start-btn" class="start-btn" aria-label="Menu iniciar">P13</button>
+      <div id="task-apps" class="task-apps"></div>
+      <div class="tray">
+        <button class="tray-btn js-sound" title="Som" aria-label="Som">🔊</button>
+        <button id="theme-btn-d" class="tray-btn" title="Trocar tema" aria-label="Trocar tema">🎨</button>
+        <span class="clock js-clock">--:--</span>
+      </div>
+    </footer>
+    <nav id="start-menu" class="start-menu hidden" aria-label="Menu iniciar">
+      <div class="start-head">
+        <div class="avatar">P</div>
+        <div><strong>Paolo</strong><br><small class="muted">Comandante · Nível 13</small></div>
+      </div>
+      <ul id="start-list"></ul>
+    </nav>
+
+    <!-- CELULAR -->
+    <main id="home" class="home hidden" aria-label="Tela inicial">
+      <header class="statusbar">
+        <span class="sb-clock js-clock">--:--</span>
+        <span class="sb-notch">P13</span>
+        <span class="sb-right">
+          <button class="sb-btn js-sound" aria-label="Som">🔊</button>
+          <button id="theme-btn" class="sb-btn" aria-label="Temas">🎨</button>
+          <span class="sb-batt" aria-hidden="true"><i></i></span>
+        </span>
+      </header>
+      <div id="home-scroll" class="home-scroll"></div>
+      <nav id="dock" class="dock" aria-label="Atalhos"></nav>
+    </main>
+
+    <div id="stack"></div>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <div class="crt" aria-hidden="true"></div>
+  </div>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "PaoloOS 13",
+  "short_name": "PaoloOS",
+  "description": "O sistema operacional de aniversário do Paolo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070B1A",
+  "theme_color": "#070B1A",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
